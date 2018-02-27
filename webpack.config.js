@@ -1,5 +1,7 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const paths = {
 	DIST: path.resolve(__dirname, 'dist'),
@@ -10,31 +12,75 @@ const paths = {
 module.exports = {
 	target: 'web',
 	entry: {
-		javascript: path.join(paths.JS, 'app.js'),
-		// html: './src/index.html'
+		main: path.join(paths.JS, 'app.js'),
+		c1_1: path.join(paths.SRC, 'c1_1/app/js/app.js'),
 	},
 	output: {
 		path: paths.DIST,
-		filename: '[name].js'
+		filename: '[name]/app/js/app.js'
 	},
 	devServer: {
 		hot: true,
 		open: true,
 	},
 	plugins: [
+		new CleanWebpackPlugin(paths.DIST),
+		new ExtractTextPlugin('style.bundle.css'),
 		new HtmlWebpackPlugin({
-      template: path.join(paths.SRC, 'index.html'),
-    }),
+			hash: true,
+			template: path.join(paths.SRC, 'index.html'),
+			filename: path.join(paths.DIST, 'index.html'),
+			chunks: [ 'main' ],
+		}),
+		new HtmlWebpackPlugin({
+			hash: true,
+			template: path.join(paths.SRC, 'c1_1/index.html'),
+			filename: path.join(paths.DIST, 'c1_1/index.html'),
+			chunks: [ 'c1_1' ],
+		}),
 	],
 	module: {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
-				use: [
-          'babel-loader',
-        ]
-			}
+				use: {
+					loader: 'babel-loader',
+					options: {
+						presets: [
+							'env',
+							'react',
+							'stage-0',
+						],
+						plugins: [
+							"syntax-class-properties",
+              "syntax-decorators",
+              "syntax-object-rest-spread",
+              "transform-class-properties",
+              "transform-object-rest-spread"
+						]
+					}
+				}
+			},
+			{
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract({
+          use: 'css-loader',
+        }),
+			},
+			{
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          'file-loader',
+        ],
+			},
+			{
+				test: /\.html/,
+				use: 'html-loader'
+			},
 		]
-	}
+	},
+	resolve: {
+    extensions: ['.js', '.jsx', '.html'],
+  },
 };
