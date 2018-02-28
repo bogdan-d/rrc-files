@@ -1,7 +1,22 @@
 const path = require('path');
+const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+const isDirectory = source => fs.lstatSync(source).isDirectory()
+const getDirectories = source =>
+	fs.readdirSync(source).map(name => path.join(source, name)).filter(isDirectory)
+const exampleConfigs;
+
+// Read configuration files from all example directories
+getDirectories('./src').forEach(v => {
+	const folder = path.basename(v);
+	if (/^c\d/.test(folder)) {
+		const conf = require(path.join(v, 'config.js'));
+		exampleConfigs[folder] = conf;
+	}
+});
 
 const paths = {
 	DIST: path.resolve(__dirname, 'dist'),
@@ -50,7 +65,7 @@ module.exports = {
 						presets: [
 							'env',
 							'react',
-							'stage-0',
+							// 'stage-0',
 						],
 						plugins: [
 							"syntax-class-properties",

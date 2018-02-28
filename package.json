@@ -33,6 +33,8 @@
     "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
+    "expect": "^22.4.0",
+    "lodash": "^4.17.5",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

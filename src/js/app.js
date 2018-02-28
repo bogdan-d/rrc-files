@@ -1,13 +1,21 @@
 (function(){
-	var crs = 30;
-	var i = 0;
-	var cont1 = document.getElementById('c1_links');
-	var cont2 = document.getElementById('c2_links');
-	var addLink = function(cont, courseId, i) {
-		var a = document.createElement('a');
-		a.href = courseId + '_' + i + '/index.html';
+	let i = 0;
+	const crs = 30;
+	const cont1 = document.getElementById('c1_links');
+	const cont2 = document.getElementById('c2_links');
+	const addLink = function(cont, courseId, i) {
+		const folder = courseId + '_' + i;
+		const indexFile = folder + '/index.html';
+		const a = document.createElement('a');
+
+		try {
+			require('../' + indexFile);
+			a.href = indexFile;
+		}
+		catch (e) {
+		}
 		a.innerText = courseId.toUpperCase() + ' - ' + i;
-		var div = document.createElement('div');
+		const div = document.createElement('div');
 		div.appendChild(a);
 		cont.appendChild(div);
 	};
