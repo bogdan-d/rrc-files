@@ -5,6 +5,14 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="title">
+        <h1><%= htmlWebpackPlugin.options.title %></h1>
+    </div>
+    <div class="col">
+        <div id="root"></div>
+    </div>
+    <div class="col">
+        <iframe src="<%= require("./config.js").articleUrl %>"></iframe>
+    </div>
 </body>
 </html>

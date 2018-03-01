@@ -25,10 +25,13 @@ getDirectories('./src').forEach(v => {
 		webpackPlugins.push(
 			new HtmlWebpackPlugin({
 				hash: true,
-				title: `Course ${c_no} - Lesson ${c_ls}`,
+				title: `Course ${c_no} - Lesson ${c_ls}${conf.title ? ` (${conf.title})` : ''}`,
+				articleUrl: conf.articleUrl,
+				videoUrl: conf.videoUrl,
 				template: path.join(paths.SRC, `${folder}/index.html`),
 				filename: path.join(paths.DIST, `${folder}/index.html`),
 				chunks: [ folder ],
+				css: [ 'app.css' ],
 			})
 		);
 	}
@@ -73,11 +76,11 @@ module.exports = {
 							// 'stage-0',
 						],
 						plugins: [
-							"syntax-class-properties",
-              "syntax-decorators",
-              "syntax-object-rest-spread",
-              "transform-class-properties",
-              "transform-object-rest-spread"
+							'syntax-class-properties',
+              'syntax-decorators',
+              'syntax-object-rest-spread',
+              'transform-class-properties',
+              'transform-object-rest-spread'
 						]
 					}
 				}

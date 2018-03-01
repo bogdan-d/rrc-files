@@ -6,16 +6,20 @@
 	const addLink = function(cont, courseId, i) {
 		const folder = courseId + '_' + i;
 		const indexFile = folder + '/index.html';
+		const configFile = folder + '/config.js';
 		const a = document.createElement('a');
+		a.innerText = courseId.toUpperCase() + ' - ' + i;
 
 		try {
-			require('../' + indexFile);
+			const config = require('../' + configFile);
 			a.href = indexFile;
+			if (config.title) {
+				a.innerText += ` (${config.title})`;
+			}
 		}
 		catch (e) {
 		}
 
-		a.innerText = courseId.toUpperCase() + ' - ' + i;
 		const div = document.createElement('div');
 		div.appendChild(a);
 		cont.appendChild(div);

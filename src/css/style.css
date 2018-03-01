@@ -32,8 +32,8 @@ html, body {
 	min-width: 100px;
 }
 .container > div:nth-child(1n) {
-	background-color: #96ceb4;
+	background-color: #cfe1d9;
 }
 .container > div:nth-child(2n) {
-	background-color: #ffe1a1;
+	background-color: #dee4f6;
 }
