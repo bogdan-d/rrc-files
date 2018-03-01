@@ -7,28 +7,38 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const isDirectory = source => fs.lstatSync(source).isDirectory()
 const getDirectories = source =>
 	fs.readdirSync(source).map(name => path.join(source, name)).filter(isDirectory)
-const exampleConfigs;
-
-// Read configuration files from all example directories
-getDirectories('./src').forEach(v => {
-	const folder = path.basename(v);
-	if (/^c\d/.test(folder)) {
-		const conf = require(path.join(v, 'config.js'));
-		exampleConfigs[folder] = conf;
-	}
-});
-
+const webpackEntries = {};
+const webpackPlugins = [];
 const paths = {
 	DIST: path.resolve(__dirname, 'dist'),
 	SRC: path.resolve(__dirname, 'src'),
 	JS: path.resolve(__dirname, 'src/js'),
 };
 
+// Read configuration files from all example directories
+getDirectories('./src').forEach(v => {
+	const folder = path.basename(v);
+	if (/^c\d/.test(folder)) {
+		const [ n, c_no, c_ls ] = folder.match(/c(\d)_(\d+)/);
+		const conf = require(`./${v}/config.js`);
+		webpackEntries[folder] = path.join(paths.SRC, `${folder}/app/js/app.js`);
+		webpackPlugins.push(
+			new HtmlWebpackPlugin({
+				hash: true,
+				title: `Course ${c_no} - Lesson ${c_ls}`,
+				template: path.join(paths.SRC, `${folder}/index.html`),
+				filename: path.join(paths.DIST, `${folder}/index.html`),
+				chunks: [ folder ],
+			})
+		);
+	}
+});
+
 module.exports = {
 	target: 'web',
 	entry: {
 		main: path.join(paths.JS, 'app.js'),
-		c1_1: path.join(paths.SRC, 'c1_1/app/js/app.js'),
+		...webpackEntries
 	},
 	output: {
 		path: paths.DIST,
@@ -47,12 +57,7 @@ module.exports = {
 			filename: path.join(paths.DIST, 'index.html'),
 			chunks: [ 'main' ],
 		}),
-		new HtmlWebpackPlugin({
-			hash: true,
-			template: path.join(paths.SRC, 'c1_1/index.html'),
-			filename: path.join(paths.DIST, 'c1_1/index.html'),
-			chunks: [ 'c1_1' ],
-		}),
+		...webpackPlugins
 	],
 	module: {
 		rules: [
@@ -91,11 +96,11 @@ module.exports = {
 			},
 			{
 				test: /\.html/,
-				use: 'html-loader'
+				use: 'underscore-template-loader'
 			},
 		]
 	},
 	resolve: {
-    extensions: ['.js', '.jsx', '.html'],
+    extensions: ['.js', '.jsx'],
   },
 };

@@ -14,6 +14,7 @@
 		}
 		catch (e) {
 		}
+
 		a.innerText = courseId.toUpperCase() + ' - ' + i;
 		const div = document.createElement('div');
 		div.appendChild(a);
