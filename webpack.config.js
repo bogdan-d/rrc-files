@@ -26,8 +26,6 @@ getDirectories('./src').forEach(v => {
 			new HtmlWebpackPlugin({
 				hash: true,
 				title: `Course ${c_no} - Lesson ${c_ls}${conf.title ? ` (${conf.title})` : ''}`,
-				articleUrl: conf.articleUrl,
-				videoUrl: conf.videoUrl,
 				template: path.join(paths.SRC, `${folder}/index.html`),
 				filename: path.join(paths.DIST, `${folder}/index.html`),
 				chunks: [ folder ],
@@ -73,7 +71,6 @@ module.exports = {
 						presets: [
 							'env',
 							'react',
-							// 'stage-0',
 						],
 						plugins: [
 							'syntax-class-properties',
